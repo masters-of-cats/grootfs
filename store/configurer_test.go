@@ -46,13 +46,40 @@ var _ = Describe("Configurer", func() {
 		It("creates the correct internal structure", func() {
 			Expect(configurer.Ensure(logger, storePath)).To(Succeed())
 
-			Expect(filepath.Join(storePath, "bundles")).To(BeADirectory())
 			Expect(filepath.Join(storePath, "cache")).To(BeADirectory())
+			stat, err := os.Stat(filepath.Join(storePath, "cache"))
+			Expect(err).NotTo(HaveOccurred())
+			Expect(stat.Mode().Perm()).To(Equal(os.FileMode(0777)))
+
 			Expect(filepath.Join(storePath, "cache", "blobs")).To(BeADirectory())
+			stat, err = os.Stat(filepath.Join(storePath, "cache", "blobs"))
+			Expect(err).NotTo(HaveOccurred())
+			Expect(stat.Mode().Perm()).To(Equal(os.FileMode(0777)))
+
 			Expect(filepath.Join(storePath, "volumes")).To(BeADirectory())
+			stat, err = os.Stat(filepath.Join(storePath, "volumes"))
+			Expect(err).NotTo(HaveOccurred())
+			Expect(stat.Mode().Perm()).To(Equal(os.FileMode(0777)))
+
 			Expect(filepath.Join(storePath, "locks")).To(BeADirectory())
+			stat, err = os.Stat(filepath.Join(storePath, "locks"))
+			Expect(err).NotTo(HaveOccurred())
+			Expect(stat.Mode().Perm()).To(Equal(os.FileMode(0777)))
+
 			Expect(filepath.Join(storePath, "meta")).To(BeADirectory())
+			stat, err = os.Stat(filepath.Join(storePath, "meta"))
+			Expect(err).NotTo(HaveOccurred())
+			Expect(stat.Mode().Perm()).To(Equal(os.FileMode(0777)))
+
 			Expect(filepath.Join(storePath, "meta", "dependencies")).To(BeADirectory())
+			stat, err = os.Stat(filepath.Join(storePath, "meta", "dependencies"))
+			Expect(err).NotTo(HaveOccurred())
+			Expect(stat.Mode().Perm()).To(Equal(os.FileMode(0777)))
+
+			Expect(filepath.Join(storePath, "bundles")).To(BeADirectory())
+			stat, err = os.Stat(filepath.Join(storePath, "bundles"))
+			Expect(err).NotTo(HaveOccurred())
+			Expect(stat.Mode().Perm()).To(Equal(os.FileMode(0777)))
 		})
 
 		Context("when the base directory does not exist", func() {

@@ -181,6 +181,10 @@ var _ = Describe("Btrfs", func() {
 			Expect(btrfs.Snapshot(logger, fromPath, toPath)).To(Succeed())
 
 			Expect(filepath.Join(toPath, "a_file")).To(BeARegularFile())
+
+			stat, err := os.Stat(toPath)
+			Expect(err).NotTo(HaveOccurred())
+			Expect(stat.Mode().Perm()).To(Equal(os.FileMode(0755)))
 		})
 
 		It("logs the correct btrfs command", func() {

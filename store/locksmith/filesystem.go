@@ -26,7 +26,7 @@ func NewFileSystem(storePath string) *FileSystem {
 
 func (l *FileSystem) Lock(key string) (*os.File, error) {
 	key = strings.Replace(key, "/", "", -1)
-	lockFile, err := os.OpenFile(l.path(key), os.O_CREATE|os.O_WRONLY, 0600)
+	lockFile, err := os.OpenFile(l.path(key), os.O_CREATE|os.O_WRONLY, 0777)
 	if err != nil {
 		return nil, fmt.Errorf("creating lock file for key `%s`: %s", key, err)
 	}
@@ -34,6 +34,10 @@ func (l *FileSystem) Lock(key string) (*os.File, error) {
 	fd := int(lockFile.Fd())
 	if err := FlockSyscall(fd, syscall.LOCK_EX); err != nil {
 		return nil, err
+	}
+
+	if err := os.Chmod(lockFile.Name(), 0777); err != nil {
+		return nil, fmt.Errorf("chmoding lock file `%s`: %s", key, err)
 	}
 
 	return lockFile, nil

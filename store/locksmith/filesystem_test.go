@@ -61,6 +61,19 @@ var _ = Describe("Filesystem", func() {
 			Expect(lockFile).To(BeAnExistingFile())
 		})
 
+		It("sets the right permission to the lock file on creation", func() {
+			lockFile := filepath.Join(storePath, store.LOCKS_DIR_NAME, "key.lock")
+
+			Expect(lockFile).ToNot(BeAnExistingFile())
+			_, err := fileSystemLock.Lock("key")
+			Expect(err).NotTo(HaveOccurred())
+			Expect(lockFile).To(BeAnExistingFile())
+
+			stat, err := os.Stat(lockFile)
+			Expect(err).NotTo(HaveOccurred())
+			Expect(stat.Mode().Perm()).To(Equal(os.FileMode(0777)))
+		})
+
 		It("removes slashes(/) from key name", func() {
 			lockFile := filepath.Join(storePath, store.LOCKS_DIR_NAME, "/tmpkey.lock")
 

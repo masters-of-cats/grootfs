@@ -22,13 +22,13 @@ func (c *Configurer) Ensure(logger lager.Logger, storePath string) error {
 
 	requiredPaths := []string{
 		storePath,
-		filepath.Join(storePath, BUNDLES_DIR_NAME),
 		filepath.Join(storePath, VOLUMES_DIR_NAME),
 		filepath.Join(storePath, CACHE_DIR_NAME),
 		filepath.Join(storePath, CACHE_DIR_NAME, "blobs"),
 		filepath.Join(storePath, LOCKS_DIR_NAME),
 		filepath.Join(storePath, META_DIR_NAME),
 		filepath.Join(storePath, META_DIR_NAME, "dependencies"),
+		filepath.Join(storePath, BUNDLES_DIR_NAME),
 	}
 
 	for _, requiredPath := range requiredPaths {
@@ -40,8 +40,12 @@ func (c *Configurer) Ensure(logger lager.Logger, storePath string) error {
 			continue
 		}
 
-		if err := os.Mkdir(requiredPath, 0700); err != nil {
+		if err := os.Mkdir(requiredPath, 0777); err != nil {
 			return fmt.Errorf("making directory `%s`: %s", requiredPath, err)
+		}
+
+		if err := os.Chmod(requiredPath, 0777); err != nil {
+			return fmt.Errorf("chmoding directory 777 `%s`: %s", requiredPath, err)
 		}
 	}
 

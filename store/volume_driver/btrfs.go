@@ -82,6 +82,12 @@ func (d *Btrfs) Snapshot(logger lager.Logger, fromPath, toPath string) error {
 		)
 	}
 
+	logger.Debug("chmoding-target-path", lager.Data{"targetPath": toPath})
+	if err := os.Chmod(toPath, 0755); err != nil {
+		logger.Error("chmoding-target-path-failed", err, lager.Data{"targetPath": toPath})
+		return fmt.Errorf("chmod target path (%s): %s", toPath, err.Error())
+	}
+
 	return nil
 }
 
