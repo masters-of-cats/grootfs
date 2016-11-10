@@ -3,7 +3,7 @@ set -e -x
 
 
 OUTPUT_PATH=$PWD/build-grootfs
-GOPATH=$GOPATH:$PWD
+GOPATH=$PWD/grootfs-release-master
 VERSION=$(cat grootfs-release-version/number)
 
 cd grootfs-release-master/src/code.cloudfoundry.org/grootfs
