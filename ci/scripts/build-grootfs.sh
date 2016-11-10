@@ -19,7 +19,7 @@ git add main.go
 git commit -m "Bump version to ${VERSION}"
 
 make
-tar -czf grootfs.tgz grootfs
-tar -czf drax.tgz drax
+tar -czf grootfs-${VERSION}.tgz grootfs
+tar -czf drax-${VERSION}.tgz drax
 
 cp -r . $OUTPUT_PATH
